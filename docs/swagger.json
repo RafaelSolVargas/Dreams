@@ -1,0 +1,1462 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "APP Dreams",
+    "description": "API para gerenciamento de banco de dados do App Dreams",
+    "termsOfService": "http://localhost:3333/api/terms",
+    "contact": {
+      "email": "dream@gmail.com"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3333/api/v1",
+      "description": "API de Desenvolvimento"
+    }
+  ],
+  "paths": {
+    "/auth": {
+      "post": {
+        "summary": "Criação de Usuário",
+        "description": "Rota para criar um usuário novo",
+        "tags": [
+          "Users"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserCreation"
+              },
+              "examples": {
+                "User": {
+                  "value": {
+                    "name": "Rafael Sol Vargas",
+                    "nickName": "Vulcano",
+                    "password": "RafaVargas5?",
+                    "dateBirth": "2000-12-31",
+                    "nationality": "brazilian",
+                    "homepage": "www.google.com",
+                    "email": "rafaels2@gmail.com",
+                    "gender": "male",
+                    "race": "white",
+                    "maritalStatus": "married",
+                    "degreeInstruction": "master",
+                    "countryId": "1",
+                    "federativeUnit": "Inglaterra",
+                    "city": "New York",
+                    "cep": "780522-3",
+                    "district": "Mato Grosso",
+                    "publicPlace": "Rua AB5",
+                    "addressNumber": "55B",
+                    "complement": "Quadra 97",
+                    "ddi": "+55",
+                    "ddd": "65",
+                    "number": "5421-2435",
+                    "type": "residencial"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Invalid values"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/UserCreation"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Login",
+        "description": "Rota para fazer login",
+        "tags": [
+          "Users"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type:": "object",
+                "properties": {
+                  "email": {
+                    "type": "email",
+                    "required": true
+                  },
+                  "password": {
+                    "type": "string",
+                    "required": true
+                  }
+                },
+                "examples": {
+                  "Login": {
+                    "value": {
+                      "email": "rafaels@gmail.com",
+                      "password": "RafaVargas5?"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Validation Errors"
+          },
+          "401": {
+            "description": "Invalid Password"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/UserReturn"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/phones": {
+      "post": {
+        "summary": "Cria um Telefone",
+        "description": "Rota para um usuário criar um telefone para si",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Phones"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PhoneCreation"
+              },
+              "examples": {
+                "User": {
+                  "value": {
+                    "ddi": "+55",
+                    "ddd": "65",
+                    "number": "5421-2435",
+                    "type": "residencial"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Invalid values"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "userId": {
+                      "type": "integer"
+                    },
+                    "ddi": {
+                      "type": "number"
+                    },
+                    "ddd": {
+                      "type": "number"
+                    },
+                    "number": {
+                      "type": "number"
+                    },
+                    "type": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/phones/{phoneId}": {
+      "get": {
+        "summary": "Busca os dados de um Telefone",
+        "description": "Rota para um usuário buscar os dados de um telefone seu",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Phones"
+        ],
+        "parameters": [
+          {
+            "name": "PhoneId",
+            "in": "path",
+            "description": "Phone Id to Get",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "401": {
+            "description": "Telefone de outro usuário"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete um telefone",
+        "description": "Delete um telefone seu pelo PhoneId",
+        "parameters": [
+          {
+            "name": "phoneId",
+            "in": "path",
+            "description": "Phone Id to delete",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Phones"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "401": {
+            "description": "Telefone de outro usuário"
+          }
+        }
+      },
+      "put": {
+        "summary": "Altera os dados de um telefone",
+        "description": "Altere os dados do seu telefone seu pelo PhoneId",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PhoneCreation"
+              },
+              "examples": {
+                "User": {
+                  "value": {
+                    "ddi": "+55",
+                    "ddd": "65",
+                    "number": "5421-2435",
+                    "type": "residencial"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "petId",
+            "in": "path",
+            "description": "Pet id to delete",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Phones"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "401": {
+            "description": "Telefone de outro usuário"
+          }
+        }
+      }
+    },
+    "/users/phones/user/{userId}": {
+      "get": {
+        "summary": "Busca todos os telefones de um usuário",
+        "description": "Rota para um usuário buscar os seus telefones",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Phones"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "User Id to Get All Phones",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Id entregue inválido"
+          },
+          "401": {
+            "description": "Acesso Negado"
+          }
+        }
+      }
+    },
+    "/users/addresses": {
+      "post": {
+        "summary": "Cria um Endereço",
+        "description": "Rota para um usuário criar um endereço para si",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Addresses"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddressCreation"
+              },
+              "examples": {
+                "Address": {
+                  "value": {
+                    "countryId": "1",
+                    "federativeUnit": "Inglaterra",
+                    "city": "New York",
+                    "cep": "780522-3",
+                    "district": "Mato Grosso",
+                    "publicPlace": "Rua AB5",
+                    "addressNumber": "55B",
+                    "complement": "Quadra 97"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Invalid values"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "countryId": {
+                      "type": "integer"
+                    },
+                    "federativeUnit": {
+                      "type": "string"
+                    },
+                    "city": {
+                      "type": "string"
+                    },
+                    "district": {
+                      "type": "string"
+                    },
+                    "publicPlace": {
+                      "type": "string"
+                    },
+                    "addressNumber": {
+                      "type": "string"
+                    },
+                    "complement": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/addresses/{addressId}": {
+      "get": {
+        "summary": "Busca os dados de um Endereço",
+        "description": "Rota para um usuário buscar os dados de um endereço seu",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Addresses"
+        ],
+        "parameters": [
+          {
+            "name": "AddressId",
+            "in": "path",
+            "description": "Address Id to Get",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "401": {
+            "description": "Endereço de outro usuário"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deleta um endereço",
+        "description": "Delete um endereço seu pelo AddressId",
+        "parameters": [
+          {
+            "name": "AddressId",
+            "in": "path",
+            "description": "Address Id to delete",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Addresses"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "401": {
+            "description": "Endereço de outro usuário"
+          }
+        }
+      },
+      "put": {
+        "summary": "Altera os dados de um telefone",
+        "description": "Altere os dados do seu telefone seu pelo PhoneId",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddressCreation"
+              },
+              "examples": {
+                "Address": {
+                  "value": {
+                    "countryId": "1",
+                    "federativeUnit": "Inglaterra",
+                    "city": "New York",
+                    "cep": "780522-3",
+                    "district": "Mato Grosso",
+                    "publicPlace": "Rua AB5",
+                    "addressNumber": "55B",
+                    "complement": "Quadra 97"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "addressId",
+            "in": "path",
+            "description": "Address id to delete",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Addresses"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "401": {
+            "description": "Endereço de outro usuário"
+          }
+        }
+      }
+    },
+    "/users/addresses/user/{userId}": {
+      "get": {
+        "summary": "Busca todos os endereços de um usuário",
+        "description": "Rota para um usuário buscar os seus endereços",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Addresses"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "User Id to Get All Addresses",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Id entregue inválido"
+          },
+          "401": {
+            "description": "Acesso Negado"
+          }
+        }
+      }
+    },
+    "/dreams": {
+      "get": {
+        "summary": "Busca todos os sonhos cadastrados no APP",
+        "description": "Rota para o ADM buscar todos os sonhos",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Dreams"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Id inválido"
+          },
+          "401": {
+            "description": "Acesso Negado"
+          }
+        }
+      },
+      "post": {
+        "summary": "Cria um dream",
+        "description": "Crie um sonho para você",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DreamCreation"
+              },
+              "examples": {
+                "Dream": {
+                  "value": {
+                    "emotionId": "1",
+                    "anotherScenarioId": "1",
+                    "scenarioId": "1",
+                    "title": "Viagem",
+                    "dateTimeDream": "2021-05-26",
+                    "moonPhase": "New Moon",
+                    "menstrualCycle": "Ovulation",
+                    "recurringDream": true,
+                    "formParticipationDuringDream": "Texto aleatório",
+                    "dreamRecord": "Texto aleatório",
+                    "climaxDream": "Texto aleatório",
+                    "upshotDream": "Texto aleatório",
+                    "dreamPeriod": "morning",
+                    "dreamVisualizationColor": "green",
+                    "dreamMovement": "fast",
+                    "characters": [
+                      {
+                        "userEmotionId": 1,
+                        "userAttitude": "happy",
+                        "characterName": "Rafael Vargas",
+                        "characterEmotionId": 2,
+                        "kinship": "father",
+                        "characterAttitude": "mad",
+                        "associationCharacter": "nao sei",
+                        "doesCharacterRepresentsYourEgo": "0"
+                      },
+                      {
+                        "userEmotionId": 2,
+                        "userAttitude": "happy",
+                        "characterName": "Rafael Vargas",
+                        "characterEmotionId": 2,
+                        "kinship": "father",
+                        "characterAttitude": "mad",
+                        "associationCharacter": "nao sei",
+                        "doesCharacterRepresentsYourEgo": "1"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Dreams"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "401": {
+            "description": "Sem autorização"
+          }
+        }
+      }
+    },
+    "/dreams/{dreamId}": {
+      "delete": {
+        "summary": "Deleta um dream",
+        "description": "Deleta um dream seu pelo dreamId",
+        "parameters": [
+          {
+            "name": "dreamId",
+            "in": "path",
+            "description": "Dream Id to delete",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Dreams"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "401": {
+            "description": "Acesso Negado"
+          }
+        }
+      },
+      "put": {
+        "summary": "Altera os dados de um dream",
+        "description": "Altere os dados do seu dream seu pelo DreamId",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DreamCreation"
+              },
+              "examples": {
+                "Dream": {
+                  "value": {
+                    "emotionId": "1",
+                    "anotherScenarioId": "1",
+                    "scenarioId": "1",
+                    "title": "Viagem",
+                    "dateTimeDream": "2021-05-26",
+                    "moonPhase": "New Moon",
+                    "menstrualCycle": "Ovulation",
+                    "recurringDream": true,
+                    "formParticipationDuringDream": "Texto aleatório",
+                    "dreamRecord": "Texto aleatório",
+                    "climaxDream": "Texto aleatório",
+                    "upshotDream": "Texto aleatório",
+                    "dreamPeriod": "morning",
+                    "dreamVisualizationColor": "green",
+                    "dreamMovement": "fast",
+                    "characters": [
+                      {
+                        "characterId": 2,
+                        "userEmotionId": 1,
+                        "userAttitude": "happy",
+                        "characterName": "Rafael Vargas",
+                        "characterEmotionId": 2,
+                        "kinship": "father",
+                        "characterAttitude": "mad",
+                        "associationCharacter": "nao sei",
+                        "doesCharacterRepresentsYourEgo": "0"
+                      },
+                      {
+                        "characterId": 3,
+                        "userEmotionId": 2,
+                        "userAttitude": "happy",
+                        "characterName": "Rafael Vargas",
+                        "characterEmotionId": 2,
+                        "kinship": "father",
+                        "characterAttitude": "mad",
+                        "associationCharacter": "nao sei",
+                        "doesCharacterRepresentsYourEgo": "1"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "dreamId",
+            "in": "path",
+            "description": "Dream id to Update",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Dreams"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "401": {
+            "description": "Sonho de outro usuário"
+          }
+        }
+      },
+      "get": {
+        "summary": "Busca um sonho específico",
+        "description": "Rota para um usuário buscar um sonho pelo Dream ID",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Dreams"
+        ],
+        "parameters": [
+          {
+            "name": "dreamId",
+            "in": "path",
+            "description": "Dream Id to Get",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Id inválido"
+          },
+          "401": {
+            "description": "Acesso Negado"
+          }
+        }
+      }
+    },
+    "/dreams/user/{userId}": {
+      "get": {
+        "summary": "Busca todos os sonhos de um usuário",
+        "description": "Rota para um usuário buscar os seus sonhos pelo ID do Usuário",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Dreams"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "User Id to Get All Dreams",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Id inválido"
+          },
+          "401": {
+            "description": "Acesso Negado"
+          }
+        }
+      }
+    },
+    "/dreams/characters/{dreamId}": {
+      "post": {
+        "summary": "Cria um character para um sonho específico",
+        "description": "Rota para um usuário criar mais um character para um de seus sonhos",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CharacterCreation"
+              },
+              "examples": {
+                "Character": {
+                  "value": {
+                    "userEmotionId": 1,
+                    "userAttitude": "mad",
+                    "characterName": "Rafael Sol Vargas",
+                    "characterEmotionId": 1,
+                    "kinship": "son",
+                    "characterAttitude": "happy",
+                    "associationCharacter": "nao sei",
+                    "doesCharacterRepresentsYourEgo": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Characters"
+        ],
+        "parameters": [
+          {
+            "name": "dreamId",
+            "in": "path",
+            "description": "Dream Id to Add Character",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Id inválido"
+          },
+          "401": {
+            "description": "Acesso Negado"
+          }
+        }
+      }
+    },
+    "/dreams/characters/{characterId}": {
+      "put": {
+        "summary": "Atualiza um character específico",
+        "description": "Rota para um usuário atualizar um character específico seu",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CharacterCreation"
+              },
+              "examples": {
+                "Character": {
+                  "value": {
+                    "userEmotionId": 1,
+                    "userAttitude": "mad",
+                    "characterName": "Rafael Sol Vargas",
+                    "characterEmotionId": 1,
+                    "kinship": "son",
+                    "characterAttitude": "happy",
+                    "associationCharacter": "nao sei",
+                    "doesCharacterRepresentsYourEgo": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Characters"
+        ],
+        "parameters": [
+          {
+            "name": "characterId",
+            "in": "path",
+            "description": "Character Id to change",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Id inválido"
+          },
+          "401": {
+            "description": "Acesso Negado"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete um character específico",
+        "description": "Rota para um usuário deletar um character específico seu",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Characters"
+        ],
+        "parameters": [
+          {
+            "name": "characterId",
+            "in": "path",
+            "description": "Character Id to Delete",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Id inválido"
+          },
+          "401": {
+            "description": "Acesso Negado"
+          }
+        }
+      },
+      "get": {
+        "summary": "Busca um character específico",
+        "description": "Rota para um usuário buscar um character específico seu",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Characters"
+        ],
+        "parameters": [
+          {
+            "name": "characterId",
+            "in": "path",
+            "description": "Character Id to Get",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Id inválido"
+          },
+          "401": {
+            "description": "Acesso Negado"
+          }
+        }
+      }
+    },
+    "/dreams/characters/dream/{dreamId}": {
+      "get": {
+        "summary": "Busca todos os characters de um sonho específico",
+        "description": "Rota para um usuário buscar todos characters cadastrados em um sonho",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Characters"
+        ],
+        "parameters": [
+          {
+            "name": "dreamId",
+            "in": "path",
+            "description": "Dream Id to Get All Characters",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Id inválido"
+          },
+          "401": {
+            "description": "Acesso Negado"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "UserCreation": {
+        "type:": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "required": true
+          },
+          "nickName": {
+            "type": "string",
+            "required": true
+          },
+          "password": {
+            "type": "string",
+            "required": true
+          },
+          "dateBirth": {
+            "type": "date",
+            "required": true
+          },
+          "nationality": {
+            "type": "string",
+            "required": true
+          },
+          "homepage": {
+            "type": "url"
+          },
+          "email": {
+            "type": "email",
+            "required": true
+          },
+          "gender": {
+            "type": "string",
+            "required": true
+          },
+          "race": {
+            "type": "string",
+            "required": true
+          },
+          "maritalStatus": {
+            "type": "string",
+            "required": true
+          },
+          "degreeInstruction": {
+            "type": "string",
+            "required": true
+          },
+          "countryId": {
+            "type": "integer"
+          },
+          "federativeUnit": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "cep": {
+            "type": "string"
+          },
+          "district": {
+            "type": "string"
+          },
+          "publicPlace": {
+            "type": "string"
+          },
+          "addressNumber": {
+            "type": "string"
+          },
+          "complement": {
+            "type": "string"
+          },
+          "ddi": {
+            "type": "number"
+          },
+          "ddd": {
+            "type": "number"
+          },
+          "number": {
+            "type": "number"
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      },
+      "UserReturn": {
+        "type:": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "integer"
+          },
+          "token": {
+            "type": "JWT"
+          },
+          "nickName": {
+            "type": "string"
+          },
+          "dateBirth": {
+            "type": "date"
+          },
+          "dateRegistration": {
+            "type": "date"
+          },
+          "nationality": {
+            "type": "string"
+          },
+          "homepage": {
+            "type": "url"
+          },
+          "email": {
+            "type": "email"
+          },
+          "gender": {
+            "type": "string"
+          },
+          "race": {
+            "type": "string"
+          },
+          "maritalStatus": {
+            "type": "string"
+          },
+          "degreeInstruction": {
+            "type": "string"
+          }
+        }
+      },
+      "PhoneCreation": {
+        "type:": "object",
+        "properties": {
+          "ddi": {
+            "type": "number"
+          },
+          "ddd": {
+            "type": "number"
+          },
+          "number": {
+            "type": "number"
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      },
+      "AddressCreation": {
+        "type:": "object",
+        "properties": {
+          "countryId": {
+            "type": "integer"
+          },
+          "federativeUnit": {
+            "type": "string",
+            "required": true
+          },
+          "city": {
+            "type": "string",
+            "required": true
+          },
+          "cep": {
+            "type": "number",
+            "required": true
+          },
+          "district": {
+            "type": "string",
+            "required": true
+          },
+          "publicPlace": {
+            "type": "string",
+            "required": true
+          },
+          "addressNumber": {
+            "type": "number",
+            "required": true
+          },
+          "complement": {
+            "type": "string"
+          }
+        }
+      },
+      "DreamCreation": {
+        "type:": "object",
+        "properties": {
+          "emotionId": {
+            "type": "integer",
+            "required": true
+          },
+          "scenarioId": {
+            "type": "integer",
+            "required": true
+          },
+          "anotherScenarioId": {
+            "type": "integer",
+            "required": true
+          },
+          "title": {
+            "type": "string",
+            "required": true
+          },
+          "dateTimeDream": {
+            "type": "date",
+            "required": true
+          },
+          "moonPhase": {
+            "type": "string",
+            "required": true
+          },
+          "menstrualCycle": {
+            "type": "string"
+          },
+          "recurringDream": {
+            "type": "boolean",
+            "required": true
+          },
+          "formParticipationDuringDream": {
+            "type": "string",
+            "required": true
+          },
+          "dreamRecord": {
+            "type": "string",
+            "required": true
+          },
+          "climaxDream": {
+            "type": "string",
+            "required": true
+          },
+          "upshotDream": {
+            "type": "string",
+            "required": true
+          },
+          "dreamPeriod": {
+            "type": "string",
+            "required": true
+          },
+          "dreamVisualizationColor": {
+            "type": "string",
+            "required": true
+          },
+          "dreamMovement": {
+            "type": "string",
+            "required": true
+          },
+          "characters": {
+            "type": "object",
+            "properties": {
+              "userEmotionId": {
+                "type": "integer",
+                "required": true
+              },
+              "userAttitude": {
+                "type": "string",
+                "required": true
+              },
+              "characterName": {
+                "type": "string",
+                "required": true
+              },
+              "characterEmotionId": {
+                "type": "integer",
+                "required": true
+              },
+              "kinship": {
+                "type": "string",
+                "required": true
+              },
+              "characterAttitude": {
+                "type": "string",
+                "required": true
+              },
+              "associationCharacter": {
+                "type": "string",
+                "required": true
+              },
+              "doesCharacterRepresentsYourEgo": {
+                "type": "integer",
+                "required": true
+              }
+            }
+          }
+        }
+      },
+      "CharacterCreation": {
+        "type:": "object",
+        "properties": {
+          "userEmotionId": {
+            "type": "integer",
+            "required": true
+          },
+          "userAttitude": {
+            "type": "string",
+            "required": true
+          },
+          "characterName": {
+            "type": "string",
+            "required": true
+          },
+          "characterEmotionId": {
+            "type": "integer",
+            "required": true
+          },
+          "kinship": {
+            "type": "string",
+            "required": true
+          },
+          "characterAttitude": {
+            "type": "string",
+            "required": true
+          },
+          "associationCharacter": {
+            "type": "string",
+            "required": true
+          },
+          "doesCharacterRepresentsYourEgo": {
+            "type": "boolen",
+            "required": true
+          }
+        }
+      }
+    }
+  },
+  "securitySchemes": {
+    "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+    }
+  }
+}

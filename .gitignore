@@ -1,0 +1,6 @@
+node_modules
+.env
+.editorconfig
+config.js
+.sequelizerc
+.eslintrc.json
